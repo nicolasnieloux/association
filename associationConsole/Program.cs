@@ -1,9 +1,13 @@
-﻿namespace associationConsole
+﻿using System.Threading.Tasks;
+using association.Service;
+
+namespace associationConsole
 {
     internal class Program
     {
-        public static void Main(string[] args)
+        static async Task Main(string[] args)
         {
+            WeatherDataService weatherDataService = new WeatherDataService();
+            await weatherDataService.dataTask();       }
         }
     }
-}
