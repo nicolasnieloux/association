@@ -1,21 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using association.Api;
+using association.Model;
+using association.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace association.Service
 {
     public class WeatherDataService {
-    public async Task dataTask()
+    public async Task dataTask(string address)
     {
+        GeocodingService geocodingService = new GeocodingService();
+        
+        Tuple<double, double> latLong = await geocodingService.GetLatLongFromAddress(address);
+        string latLongString = $"_ll={latLong.Item1.ToString(CultureInfo.InvariantCulture)},{latLong.Item2.ToString(CultureInfo.InvariantCulture)}";
+        Console.WriteLine(latLongString);
         IAPIClient apiClient = new APIClient();
-
-        string apiUrl = "http://www.infoclimat.fr/public-api/gfs/json?_ll=48.85341,2.3488&_auth=VE4CFVIsBiRfclFmAnQBKFU9DzoKfAUiAHxSMVs%2BUi8BagRlAmJQNl8xB3pQf1BmVHkObVliCTlXPFAoXS8DYlQ%2BAm5SOQZhXzBRNAItASpVew9uCioFIgBiUjxbNVIvAWAEZAJpUCxfNQdtUH5QZVRgDmhZeQkuVzVQMF0yA2JUPgJlUjAGbV83UToCLQEqVWAPaQpnBTwAN1JnWzZSYwFmBGECaVAzX2EHbFB%2BUGRUZQ5vWWcJMVc3UDFdNQN%2FVCgCH1JCBnlfcFFxAmcBc1V7DzoKawVp&_c=4546c9308c888fb29c285274ce9c6563";
-
+        
+        string apiUrl = $"{Constants.BaseUrl}{latLongString}&{Constants.Auth}&{Constants.End}";   
+        
         try
         {
             string response = await apiClient.GetApiResponseAsync(apiUrl);
-            Console.WriteLine(response);
+            WeatherData weatherData = JsonConvert.DeserializeObject<WeatherData>(response);
+            Display.DisplayWeatherData(weatherData);
 
         }
         catch (HttpRequestException e)
@@ -23,9 +35,6 @@ namespace association.Service
             Console.WriteLine("\nException capturée !");
             Console.WriteLine("Message : {0} ", e.Message);
         }
-
-        // Attendre l'appui d'une touche pour fermer la console
-        Console.ReadKey();
     }
 }
 }

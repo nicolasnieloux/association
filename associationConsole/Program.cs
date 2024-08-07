@@ -8,6 +8,7 @@ namespace associationConsole
         static async Task Main(string[] args)
         {
             WeatherDataService weatherDataService = new WeatherDataService();
-            await weatherDataService.dataTask();       }
+            await weatherDataService.dataTask("Grenoble");
         }
     }
+}
