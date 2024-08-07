@@ -8,17 +8,26 @@ namespace association.Utils
 {
     public class Display
     {
-        public static void DisplayWeatherData(WeatherData weatherData)
+        public static void DisplayDailyWeatherData(Dictionary<string, Dictionary<string, float>> dailyWeather)
         {
-            foreach(KeyValuePair<string, JToken> entry in weatherData.data)
+            if (dailyWeather.Count == 0)
+            {
+                Console.WriteLine("Pas de données météo disponibles.");
+                return;
+            }
+
+            foreach (var entry in dailyWeather)
             {
                 string datetime = entry.Key;
-                WeatherDetails details = JsonConvert.DeserializeObject<WeatherDetails>(entry.Value.ToString());
-
-                Console.WriteLine($"Date et heure: {datetime}");
-                Console.WriteLine($"Température à 2 mètres : {details.Temperature.T2m}");
-                Console.WriteLine($"Pression au niveau de la mer : {details.Pression.NiveauDeLaMer}");
-                Console.WriteLine($"Pluie (convective) : {details.PluieConvective}");
+                // Convertir de Kelvin à Celsius.
+                float t2m = entry.Value["t2mTotal"] / entry.Value["hours"] - 273.15f;
+                float pressure = entry.Value["pressureTotal"] / entry.Value["hours"];
+                float rainfall = entry.Value["rainfallTotal"] / entry.Value["hours"];
+        
+                Console.WriteLine($"Date : {datetime}");
+                Console.WriteLine($"Moyenne de température : {t2m:F2} °C");
+                Console.WriteLine($"Moyenne de pression au niveau de la mer : {pressure:F2} hPa");
+                Console.WriteLine($"Moyenne de pluie convective : {rainfall:F2} mm");
                 Console.WriteLine("---------------------------------------------------");
             }
         }

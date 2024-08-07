@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using association.Service;
 
 namespace associationConsole
@@ -8,7 +9,9 @@ namespace associationConsole
         static async Task Main(string[] args)
         {
             WeatherDataService weatherDataService = new WeatherDataService();
-            await weatherDataService.dataTask("Grenoble");
+            Console.Write("Veuillez saisir le lieu : ");
+            string lieu = Console.ReadLine();
+            await weatherDataService.dataTask(lieu);
         }
     }
 }
