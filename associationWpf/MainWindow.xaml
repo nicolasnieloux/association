@@ -18,9 +18,24 @@
             <DatePicker Name="EndDatePicker" SelectedDate="{Binding EndDate, Mode=TwoWay}" />
             <TextBlock Text="{Binding SelectedDateRange}" Margin="0,20,0,0"/>
             <Button x:Name="CreateEvent" Content="Créer un évenement" Command="{Binding CreateEventCommand}"> </Button>
+            
+            
+            <ListView ItemsSource="{Binding Events}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding StartDate}" />
+                        <GridViewColumn Header="End Date" DisplayMemberBinding="{Binding EndDate}" />
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn Header="Registered People Count" DisplayMemberBinding="{Binding RegisteredPeopleCount}" />
+                        <GridViewColumn Header="Location" DisplayMemberBinding="{Binding Location}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            
+            
         </StackPanel>
         
-       
+        
         
     </Grid>
 </Window>

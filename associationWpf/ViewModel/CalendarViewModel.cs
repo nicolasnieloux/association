@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using association.Model;
 using association.Service;
 using CommunityToolkit.Mvvm.Input;
 
@@ -12,20 +13,37 @@ namespace associationWpf.ViewModel
         private DateTime _startDate;
         private DateTime _endDate;
         private DateTime _selectedDate;
-
+        private ObservableCollection<Event> _events;
+       
+        public ObservableCollection<Event> Events
+        {
+            get { return _events; }
+            set
+            {
+                if (_events != value)
+                {
+                    _events = value;
+                    OnPropertyChanged(nameof(Events));
+                }
+            }
+        }
         public CalendarViewModel()
         {
             StartDate = DateTime.Today;
             EndDate = DateTime.Today;
             SelectedDate = DateTime.Today;
             this.CreateEventCommand = new RelayCommand(this.OnCreateEvent);
+            Events = new ObservableCollection<Event>();
         }
 
         public async void OnCreateEvent()
         {       
             var eventService = new EventService();
-            await eventService.CreateEvent("Rando", _selectedDate, _endDate, 2, 8, "Grenoble");
-
+            var eventCreated = await eventService.CreateEvent("Rando", _selectedDate, _endDate, 2, 8, "Grenoble");
+            if (eventCreated != null)
+            {
+                Events.Add(eventCreated); // Ajoute un nouvel événement à la liste après sa création.
+            }
         }
 
         public string SelectedDateRange
