@@ -24,23 +24,25 @@
             
             <Button x:Name="CreateEvent" Content="Créer un évenement" Command="{Binding CreateEventCommand}"> </Button>
            
-            <ListView ItemsSource="{Binding Events}">
+            <ListView ItemsSource="{Binding Events}" SelectedItem="{Binding SelectedEvent}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding StartDate}" />
                         <GridViewColumn Header="End Date" DisplayMemberBinding="{Binding EndDate}" />
                         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
                         <GridViewColumn Header="Registered People Count" DisplayMemberBinding="{Binding RegisteredPeopleCount}" />
-                        <GridViewColumn Header="Space available" DisplayMemberBinding="{Binding AvailableSpots}"></GridViewColumn>
+                        <GridViewColumn Header="Space available" DisplayMemberBinding="{Binding AvailableSpots}" />
                         <GridViewColumn Header="Location" DisplayMemberBinding="{Binding Location}" />
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Delete" Command="{Binding DataContext.DeleteEventCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"></Button>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
-            
-            
         </StackPanel>
-        
-        
-        
     </Grid>
 </Window>

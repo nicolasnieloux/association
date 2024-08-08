@@ -24,5 +24,18 @@ namespace association.Service
         {
             return new List<Event>(_events);
         }
+        
+        public async Task DeleteEvent(Event eventToDelete)
+        {
+            if (_events.Contains(eventToDelete))
+            {
+                _events.Remove(eventToDelete);
+                await Task.CompletedTask; // Simule un appel asynchrone
+            }
+            else
+            {
+                throw new ArgumentException("Event not found");
+            }
+        }
     }
 }
