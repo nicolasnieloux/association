@@ -18,6 +18,10 @@ namespace association.Utils
                     { "ventMoyenTotal", 0 },
                     { "ventRafalesTotal", 0 },
                     { "ventDirectionTotal", 0 },
+                    { "nebulositeHauteTotal", 0 },
+                    { "nebulositeMoyenneTotal", 0 },
+                    { "nebulositeBasseTotal", 0 },
+                    { "nebulositeTotaleTotal", 0 },                    
                     { "hours", 0 }
                 };
             }
@@ -29,6 +33,10 @@ namespace association.Utils
             dailyWeather[date]["ventMoyenTotal"] += details.VentMoyen.V10m;
             dailyWeather[date]["ventRafalesTotal"] += details.VentRafales.V10m;
             dailyWeather[date]["ventDirectionTotal"] += details.VentDirection.V10m;
+            dailyWeather[date]["nebulositeHauteTotal"] += details.Nebulosite.Haute;
+            dailyWeather[date]["nebulositeMoyenneTotal"] += details.Nebulosite.Moyenne;
+            dailyWeather[date]["nebulositeBasseTotal"] += details.Nebulosite.Basse;
+            dailyWeather[date]["nebulositeTotaleTotal"] += details.Nebulosite.Totale;           
             dailyWeather[date]["hours"] += 1;
         }
 
@@ -44,6 +52,10 @@ namespace association.Utils
                 dailyEntry.Value["ventMoyenTotal"] /= hours;
                 dailyEntry.Value["ventRafalesTotal"] /= hours;
                 dailyEntry.Value["ventDirectionTotal"] /= hours;
+                dailyEntry.Value["nebulositeHauteTotal"] /= hours;
+                dailyEntry.Value["nebulositeMoyenneTotal"] /= hours;
+                dailyEntry.Value["nebulositeBasseTotal"] /= hours;
+                dailyEntry.Value["nebulositeTotaleTotal"] /= hours;               
             }
         }
     }
