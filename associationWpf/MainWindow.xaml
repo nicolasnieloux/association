@@ -11,11 +11,16 @@
     <Window.DataContext>
         <vm:CalendarViewModel/>
     </Window.DataContext>
+    <Window.Resources></Window.Resources>
     <Grid>
         <StackPanel Orientation="Vertical">
             <DatePicker Name="StartDatePicker" SelectedDate="{Binding StartDate, Mode=TwoWay}" />
             <DatePicker Name="EndDatePicker" SelectedDate="{Binding EndDate, Mode=TwoWay}" />
             <TextBlock Text="{Binding SelectedDateRange}" Margin="0,20,0,0"/>
+            <Button x:Name="CreateEvent" Content="Créer un évenement" Command="{Binding CreateEventCommand}"> </Button>
         </StackPanel>
+        
+       
+        
     </Grid>
 </Window>

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
+using association.Service;
+using CommunityToolkit.Mvvm.Input;
 
 namespace associationWpf.ViewModel
 {
@@ -15,13 +18,14 @@ namespace associationWpf.ViewModel
             StartDate = DateTime.Today;
             EndDate = DateTime.Today;
             SelectedDate = DateTime.Today;
+            this.CreateEventCommand = new RelayCommand(this.OnCreateEvent);
         }
 
-        public CalendarViewModel(DateTime startDate, DateTime endDate)
-        {
-            StartDate = startDate;
-            EndDate = endDate;
-            SelectedDate = DateTime.Today;
+        public async void OnCreateEvent()
+        {       
+            var eventService = new EventService();
+            await eventService.CreateEvent("Rando", _selectedDate, _endDate, 2, 8, "Grenoble");
+
         }
 
         public string SelectedDateRange
@@ -81,5 +85,9 @@ namespace associationWpf.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        
+        public ICommand CreateEventCommand { get; private set; }
     }
+   
+
 }
