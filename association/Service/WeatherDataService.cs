@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace association.Service
 {
-    public class WeatherDataService 
+    public class WeatherDataService
     {
         // La méthode originale pour afficher les données météo
         public async Task DisplayWeatherData(string address)
@@ -25,23 +25,26 @@ namespace association.Service
             GeocodingService geocodingService = new GeocodingService();
 
             Tuple<double, double> latLong = await geocodingService.GetLatLongFromAddress(address);
-            string latLongString = $"_ll={latLong.Item1.ToString(CultureInfo.InvariantCulture)},{latLong.Item2.ToString(CultureInfo.InvariantCulture)}";
+            string latLongString =
+                $"_ll={latLong.Item1.ToString(CultureInfo.InvariantCulture)},{latLong.Item2.ToString(CultureInfo.InvariantCulture)}";
             Console.WriteLine(latLongString);
             IAPIClient apiClient = new APIClient();
 
-            string apiUrl = $"{Constants.BaseUrl}{latLongString}&{Constants.Auth}&{Constants.End}";   
+            string apiUrl = $"{Constants.BaseUrl}{latLongString}&{Constants.Auth}&{Constants.End}";
 
-            Dictionary<string, Dictionary<string, float>> dailyWeather = new Dictionary<string, Dictionary<string, float>>();
+            Dictionary<string, Dictionary<string, float>> dailyWeather =
+                new Dictionary<string, Dictionary<string, float>>();
 
             try
             {
                 string response = await apiClient.GetApiResponseAsync(apiUrl);
                 WeatherData weatherData = JsonConvert.DeserializeObject<WeatherData>(response);
-
+                Console.WriteLine(weatherData);
                 foreach (var entry in weatherData.data)
                 {
                     // Convertir le timestamp (la clé) à un object DateTime.
-                    DateTime timestamp = DateTime.ParseExact(entry.Key, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                    DateTime timestamp =
+                        DateTime.ParseExact(entry.Key, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                     string date = timestamp.ToString("yyyy-MM-dd");
 
                     // Désérialiser les détails météo (la valeur) vers WeatherDetails.
@@ -52,6 +55,7 @@ namespace association.Service
                 }
 
                 WeatherDataUtils.CalculateAverageWeatherData(dailyWeather);
+                Console.WriteLine(dailyWeather);
                 return dailyWeather;
             }
             catch (HttpRequestException e)
