@@ -1,31 +1,65 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using association.Api;
+using association.Model;
+using association.Utils;
+using Newtonsoft.Json;
 
 namespace association.Service
 {
-    public class WeatherDataService {
-    public async Task dataTask()
+    public class WeatherDataService 
     {
-        IAPIClient apiClient = new APIClient();
-
-        string apiUrl = "http://www.infoclimat.fr/public-api/gfs/json?_ll=48.85341,2.3488&_auth=VE4CFVIsBiRfclFmAnQBKFU9DzoKfAUiAHxSMVs%2BUi8BagRlAmJQNl8xB3pQf1BmVHkObVliCTlXPFAoXS8DYlQ%2BAm5SOQZhXzBRNAItASpVew9uCioFIgBiUjxbNVIvAWAEZAJpUCxfNQdtUH5QZVRgDmhZeQkuVzVQMF0yA2JUPgJlUjAGbV83UToCLQEqVWAPaQpnBTwAN1JnWzZSYwFmBGECaVAzX2EHbFB%2BUGRUZQ5vWWcJMVc3UDFdNQN%2FVCgCH1JCBnlfcFFxAmcBc1V7DzoKawVp&_c=4546c9308c888fb29c285274ce9c6563";
-
-        try
+        // La méthode originale pour afficher les données météo
+        public async Task DisplayWeatherData(string address)
         {
-            string response = await apiClient.GetApiResponseAsync(apiUrl);
-            Console.WriteLine(response);
-
-        }
-        catch (HttpRequestException e)
-        {
-            Console.WriteLine("\nException capturée !");
-            Console.WriteLine("Message : {0} ", e.Message);
+            var dailyWeather = await GetWeatherDataForEvent(address);
+            Display.DisplayDailyWeatherData(dailyWeather);
         }
 
-        // Attendre l'appui d'une touche pour fermer la console
-        Console.ReadKey();
+        // La nouvelle méthode pour renvoyer les données météo
+        public async Task<Dictionary<string, Dictionary<string, float>>> GetWeatherDataForEvent(string address)
+        {
+            GeocodingService geocodingService = new GeocodingService();
+
+            Tuple<double, double> latLong = await geocodingService.GetLatLongFromAddress(address);
+            string latLongString = $"_ll={latLong.Item1.ToString(CultureInfo.InvariantCulture)},{latLong.Item2.ToString(CultureInfo.InvariantCulture)}";
+            Console.WriteLine(latLongString);
+            IAPIClient apiClient = new APIClient();
+
+            string apiUrl = $"{Constants.BaseUrl}{latLongString}&{Constants.Auth}&{Constants.End}";   
+
+            Dictionary<string, Dictionary<string, float>> dailyWeather = new Dictionary<string, Dictionary<string, float>>();
+
+            try
+            {
+                string response = await apiClient.GetApiResponseAsync(apiUrl);
+                WeatherData weatherData = JsonConvert.DeserializeObject<WeatherData>(response);
+
+                foreach (var entry in weatherData.data)
+                {
+                    // Convertir le timestamp (la clé) à un object DateTime.
+                    DateTime timestamp = DateTime.ParseExact(entry.Key, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                    string date = timestamp.ToString("yyyy-MM-dd");
+
+                    // Désérialiser les détails météo (la valeur) vers WeatherDetails.
+                    WeatherDetails details = entry.Value.ToObject<WeatherDetails>();
+
+                    // Compute daily average
+                    WeatherDataUtils.AccumulateWeatherData(details, dailyWeather, date);
+                }
+
+                WeatherDataUtils.CalculateAverageWeatherData(dailyWeather);
+                return dailyWeather;
+            }
+            catch (HttpRequestException e)
+            {
+                Console.WriteLine("\nException capturée !");
+                Console.WriteLine("Message : {0} ", e.Message);
+                return null;
+            }
+        }
     }
-}
 }
