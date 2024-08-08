@@ -12,7 +12,7 @@ namespace associationConsole
             WeatherDataService weatherDataService = new WeatherDataService();
             EventService eventService = new EventService();
             
-            Console.WriteLine("Souhaitez-vous 1) Consulter la météo pour les 7 prochains jours, ou 2) Créer un événement ? Veuillez saisir 1 ou 2.");
+            Console.WriteLine("Souhaitez-vous Consulter la météo pour les 7 prochains jours 1 , ou Créer un événement 2 ? Veuillez saisir 1 ou 2.");
             string choice = Console.ReadLine();
 
             if(choice == "1")
@@ -40,14 +40,33 @@ namespace associationConsole
                 Console.Write("Veuillez saisir le nombre de personnes inscrites : ");
                 int registeredPeopleCount = Convert.ToInt32(Console.ReadLine());
         
-                Console.Write("Veuillez saisir le nombre de 1places disponibles : ");
+                Console.Write("Veuillez saisir le nombre de places disponibles : ");
                 int availableSpots = Convert.ToInt32(Console.ReadLine());
         
-                Event createdEvent = await eventService.CreateEvent(eventName, startDate, endDate, registeredPeopleCount, availableSpots, lieu);
+                await eventService.CreateEvent(eventName, startDate, endDate, registeredPeopleCount, availableSpots, lieu);
                 
-                Console.WriteLine($"Evénement {createdEvent.Name} créé avec succès. L'événement commencera le {createdEvent.StartDate} et se terminera le {createdEvent.EndDate}. " + 
-                                  $"Compte des personnes inscrites : {createdEvent.RegisteredPeopleCount}, places disponibles : {createdEvent.AvailableSpots}, et lieu : {createdEvent.Location}.");
-                await weatherDataService.DisplayWeatherData(lieu);
+                // Console.WriteLine($"Evénement {createdEvent.Name} créé avec succès. L'événement commencera le {createdEvent.StartDate} et se terminera le {createdEvent.EndDate}. " + 
+                //                   $"Compte des personnes inscrites : {createdEvent.RegisteredPeopleCount}, places disponibles : {createdEvent.AvailableSpots}, lieu : {createdEvent.Location}.");
+                //
+                // await weatherDataService.DisplayWeatherData(lieu);
+                
+                Console.WriteLine("Voulez-vous voir tous les événements ? Entrez oui ou non.");
+                choice = Console.ReadLine();
+
+                if(choice.ToLower() == "oui")
+                {
+                    Console.WriteLine("Liste des événements :");
+                    
+                    var events = eventService.GetEvents();
+                    foreach (var e in events)
+                    {
+                        Console.WriteLine($"Événement {e.Name}: commence le {e.StartDate}, se termine le {e.EndDate}, lieu : {e.Location}, " + 
+                                          $"nombre de personnes inscrites : {e.RegisteredPeopleCount}, places disponibles : {e.AvailableSpots}");
+                        
+                        await weatherDataService.DisplayWeatherData(e.Location);
+
+                    }
+                }
             }
             else
             {
