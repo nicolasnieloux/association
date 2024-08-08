@@ -17,9 +17,13 @@
             <DatePicker Name="StartDatePicker" SelectedDate="{Binding StartDate, Mode=TwoWay}" />
             <DatePicker Name="EndDatePicker" SelectedDate="{Binding EndDate, Mode=TwoWay}" />
             <TextBlock Text="{Binding SelectedDateRange}" Margin="0,20,0,0"/>
-            <Button x:Name="CreateEvent" Content="Créer un évenement" Command="{Binding CreateEventCommand}"> </Button>
-            <ComboBox ItemsSource="{Binding ListRando}" SelectedValue="{Binding SelectedRando}" />
             
+            <ComboBox ItemsSource="{Binding ListRando}" SelectedValue="{Binding SelectedRando}" />
+            <ComboBox ItemsSource="{Binding ListActivity}" SelectedValue="{Binding SelectedActivity}"></ComboBox>
+            <ComboBox ItemsSource="{Binding ListNumberPeople}" SelectedValue="{Binding SelectedNumberPeople}"></ComboBox>
+            
+            <Button x:Name="CreateEvent" Content="Créer un évenement" Command="{Binding CreateEventCommand}"> </Button>
+           
             <ListView ItemsSource="{Binding Events}">
                 <ListView.View>
                     <GridView>
@@ -27,6 +31,7 @@
                         <GridViewColumn Header="End Date" DisplayMemberBinding="{Binding EndDate}" />
                         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
                         <GridViewColumn Header="Registered People Count" DisplayMemberBinding="{Binding RegisteredPeopleCount}" />
+                        <GridViewColumn Header="Space available" DisplayMemberBinding="{Binding AvailableSpots}"></GridViewColumn>
                         <GridViewColumn Header="Location" DisplayMemberBinding="{Binding Location}" />
                     </GridView>
                 </ListView.View>
