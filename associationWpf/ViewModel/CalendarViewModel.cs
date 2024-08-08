@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -14,6 +15,7 @@ namespace associationWpf.ViewModel
         private DateTime _endDate;
         private DateTime _selectedDate;
         private ObservableCollection<Event> _events;
+        private List<string> _listRando;
        
         public ObservableCollection<Event> Events
         {
@@ -34,12 +36,26 @@ namespace associationWpf.ViewModel
             SelectedDate = DateTime.Today;
             this.CreateEventCommand = new RelayCommand(this.OnCreateEvent);
             Events = new ObservableCollection<Event>();
+            _listRando = new List<string> { "Crolles", "Saint-Hilaire-du-Touvet", "Le Touvet", "Saint-Ismier", "Bernin", "La Tronche", "Meylan", "Froges", "Villard-Bonnot", "Le Champ-près-Froges", "Lumbin", "Saint-Pancrasse", "Allevard", "Theys", "Tencin" };
+        }
+        
+        public List<string> ListRando
+        {
+            get { return _listRando; }
+            set
+            {
+                if (_listRando != value)
+                {
+                    _listRando = value;
+                    OnPropertyChanged(nameof(ListRando));
+                }
+            }
         }
 
         public async void OnCreateEvent()
         {       
             var eventService = new EventService();
-            var eventCreated = await eventService.CreateEvent("Rando", _selectedDate, _endDate, 2, 8, "Grenoble");
+            var eventCreated = await eventService.CreateEvent("Rando", _selectedDate, _endDate, 2, 8, SelectedRando);
             if (eventCreated != null)
             {
                 Events.Add(eventCreated); // Ajoute un nouvel événement à la liste après sa création.
@@ -105,6 +121,7 @@ namespace associationWpf.ViewModel
         }
         
         public ICommand CreateEventCommand { get; private set; }
+        public string SelectedRando { get; set; }
     }
    
 
