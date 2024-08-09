@@ -25,7 +25,7 @@ namespace associationWpf.ViewModel
         private Event _selectedEvent;
         private readonly EventService _eventService;
         private string _weatherDataFormatted;
-        
+
         public string WeatherDataFormatted
         {
             get { return _weatherDataFormatted; }
@@ -39,7 +39,6 @@ namespace associationWpf.ViewModel
             }
         }
 
-        
 
         public CalendarViewModel()
         {
@@ -49,8 +48,20 @@ namespace associationWpf.ViewModel
             this.CreateEventCommand = new RelayCommand(this.OnCreateEvent);
             this.DeleteEventCommand = new RelayCommand<Event>(this.OnDeleteEvent);
             Events = new ObservableCollection<Event>();
-            _listRando = new List<string> { "Crolles", "Saint-Hilaire-du-Touvet", "Le Touvet", "Saint-Ismier", "Bernin", "La Tronche", "Meylan", "Froges", "Villard-Bonnot", "Le Champ-près-Froges", "Lumbin", "Saint-Pancrasse", "Allevard", "Theys", "Tencin" };
-            _listRandoActivites = new List<string> { "Trek", "Marche nordique", "Randonnée avec bivouac", "Randonnée en raquettes", "Randonnée d'altitude", "Randonnée en famille", "Randonnée avec guide", "Randonnée photo", "Randonnée botanique", "Randonnée ornithologique", "Randonnée géologique", "Randonnée aquatique", "Randonnée à thèmes", "Randonnée nocturne", "Randonnée avec ânes", "Trail running", "Randonnée en refuge", "Randonnée en itinérance", "Randonnée en circuit", "Randonnée découverte" };
+            _listRando = new List<string>
+            {
+                "Crolles", "Saint-Hilaire-du-Touvet", "Le Touvet", "Saint-Ismier", "Bernin", "La Tronche", "Meylan",
+                "Froges", "Villard-Bonnot", "Le Champ-près-Froges", "Lumbin", "Saint-Pancrasse", "Allevard", "Theys",
+                "Tencin"
+            };
+            _listRandoActivites = new List<string>
+            {
+                "Trek", "Marche nordique", "Randonnée avec bivouac", "Randonnée en raquettes", "Randonnée d'altitude",
+                "Randonnée en famille", "Randonnée avec guide", "Randonnée photo", "Randonnée botanique",
+                "Randonnée ornithologique", "Randonnée géologique", "Randonnée aquatique", "Randonnée à thèmes",
+                "Randonnée nocturne", "Randonnée avec ânes", "Trail running", "Randonnée en refuge",
+                "Randonnée en itinérance", "Randonnée en circuit", "Randonnée découverte"
+            };
             _listNumberPeople = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             _eventService = new EventService();
         }
@@ -129,18 +140,21 @@ namespace associationWpf.ViewModel
 
         public async void OnCreateEvent()
         {
-            var eventCreated = await _eventService.CreateEvent(SelectedActivity, _selectedDate, _endDate, SelectedNumberPeople, AvailableSpots, SelectedRando);
-    
+            var eventCreated = await _eventService.CreateEvent(SelectedActivity, _selectedDate, _endDate,
+                SelectedNumberPeople, AvailableSpots, SelectedRando);
+
             if (eventCreated != null)
             {
                 // Format the weather data
                 var weatherService = new WeatherDataService();
                 var weatherData = await weatherService.GetWeatherDataForEvent(eventCreated.Location);
-        
+
                 if (weatherData != null && weatherData.ContainsKey(_selectedDate.ToString("yyyy-MM-dd")))
                 {
                     var dailyWeather = weatherData[_selectedDate.ToString("yyyy-MM-dd")];
-                    float nebTotaleTotal = dailyWeather.ContainsKey("nebulositeTotaleTotal") ? dailyWeather["nebulositeTotaleTotal"] : 0;
+                    float nebTotaleTotal = dailyWeather.ContainsKey("nebulositeTotaleTotal")
+                        ? dailyWeather["nebulositeTotaleTotal"]
+                        : 0;
                     string nebTotalText = Display.ConvertNebulositeToText(nebTotaleTotal);
 
                     eventCreated.WeatherDataFormatted = nebTotalText;
@@ -213,6 +227,7 @@ namespace associationWpf.ViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

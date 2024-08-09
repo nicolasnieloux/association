@@ -10,27 +10,29 @@ namespace association.Service
         private WeatherDataService _weatherDataService = new WeatherDataService();
         private List<Event> _events = new List<Event>();
 
-        public async Task<Event> CreateEvent(string name, DateTime startDate, DateTime endDate, int registeredPeopleCount, int availableSpots, string location)
+        public async Task<Event> CreateEvent(string name, DateTime startDate, DateTime endDate,
+            int registeredPeopleCount, int availableSpots, string location)
         {
             var weatherData = await _weatherDataService.GetWeatherDataForEvent(location);
 
-            Event newEvent = new Event(startDate, endDate, name, registeredPeopleCount, availableSpots,location, weatherData);
+            Event newEvent = new Event(startDate, endDate, name, registeredPeopleCount, availableSpots, location,
+                weatherData);
             _events.Add(newEvent);
 
             return newEvent;
         }
-        
+
         public List<Event> GetEvents()
         {
             return new List<Event>(_events);
         }
-        
+
         public async Task DeleteEvent(Event eventToDelete)
         {
             if (_events.Contains(eventToDelete))
             {
                 _events.Remove(eventToDelete);
-                await Task.CompletedTask; // Simule un appel asynchrone
+                await Task.CompletedTask;
             }
             else
             {

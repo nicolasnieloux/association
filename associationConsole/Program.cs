@@ -45,11 +45,6 @@ namespace associationConsole
         
                 await eventService.CreateEvent(eventName, startDate, endDate, registeredPeopleCount, availableSpots, lieu);
                 
-                // Console.WriteLine($"Evénement {createdEvent.Name} créé avec succès. L'événement commencera le {createdEvent.StartDate} et se terminera le {createdEvent.EndDate}. " + 
-                //                   $"Compte des personnes inscrites : {createdEvent.RegisteredPeopleCount}, places disponibles : {createdEvent.AvailableSpots}, lieu : {createdEvent.Location}.");
-                //
-                // await weatherDataService.DisplayWeatherData(lieu);
-                
                 Console.WriteLine("Voulez-vous voir tous les événements ? Entrez oui ou non.");
                 choice = Console.ReadLine();
 
@@ -64,7 +59,6 @@ namespace associationConsole
                                           $"nombre de personnes inscrites : {e.RegisteredPeopleCount}, places disponibles : {e.AvailableSpots}");
                         
                         await weatherDataService.DisplayWeatherData(e.Location);
-
                     }
                 }
             }

@@ -41,10 +41,9 @@ namespace association.Utils
             foreach (var entry in dailyWeather)
             {
                 string datetime = entry.Key;
-
                 float nebTotaleTotal = entry.Value["nebulositeTotaleTotal"];
                 string nebTotalText = ConvertNebulositeToText(nebTotaleTotal);
-            
+
                 Console.WriteLine($"Date : {datetime}");
                 Console.WriteLine($"Nebulosite totale : {nebTotaleTotal} - {nebTotalText}");
                 Console.WriteLine("---------------------------------------------------");

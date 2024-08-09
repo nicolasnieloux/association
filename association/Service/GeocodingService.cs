@@ -10,7 +10,8 @@ namespace association.Service
     {
         public async Task<Tuple<double, double>> GetLatLongFromAddress(string address)
         {
-            var apiUrl = $"https://api.opencagedata.com/geocode/v1/json?q={Uri.EscapeDataString(address)}&key={Constants.apiKey}";
+            var apiUrl =
+                $"https://api.opencagedata.com/geocode/v1/json?q={Uri.EscapeDataString(address)}&key={Constants.apiKey}";
             IAPIClient apiClient = new APIClient();
 
             string response = await apiClient.GetApiResponseAsync(apiUrl);
