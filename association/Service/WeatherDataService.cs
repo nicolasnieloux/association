@@ -38,8 +38,9 @@ namespace association.Service
             try
             {
                 string response = await apiClient.GetApiResponseAsync(apiUrl);
+                // Console.WriteLine(response);
                 WeatherData weatherData = JsonConvert.DeserializeObject<WeatherData>(response);
-                Console.WriteLine(weatherData);
+                // Console.WriteLine(weatherData);
                 foreach (var entry in weatherData.data)
                 {
                     // Convertir le timestamp (la clé) à un object DateTime.
@@ -55,7 +56,7 @@ namespace association.Service
                 }
 
                 WeatherDataUtils.CalculateAverageWeatherData(dailyWeather);
-                Console.WriteLine(dailyWeather);
+                Display.DisplayDailyWeatherData(dailyWeather);
                 return dailyWeather;
             }
             catch (HttpRequestException e)

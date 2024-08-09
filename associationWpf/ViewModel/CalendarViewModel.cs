@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Input;
 using association.Model;
 using association.Service;
+using association.Utils;
 using CommunityToolkit.Mvvm.Input;
 
 namespace associationWpf.ViewModel
@@ -23,6 +24,21 @@ namespace associationWpf.ViewModel
         private int _totalSpots = 9;
         private Event _selectedEvent;
         private readonly EventService _eventService;
+        private string _weatherDataFormatted;
+        
+        public string WeatherDataFormatted
+        {
+            get { return _weatherDataFormatted; }
+            set
+            {
+                if (_weatherDataFormatted != value)
+                {
+                    _weatherDataFormatted = value;
+                    OnPropertyChanged(nameof(WeatherDataFormatted));
+                }
+            }
+        }
+
         
 
         public CalendarViewModel()
@@ -113,13 +129,27 @@ namespace associationWpf.ViewModel
 
         public async void OnCreateEvent()
         {
-
             var eventCreated = await _eventService.CreateEvent(SelectedActivity, _selectedDate, _endDate, SelectedNumberPeople, AvailableSpots, SelectedRando);
+    
             if (eventCreated != null)
             {
-                Events.Add(eventCreated); // Ajoute un nouvel événement à la liste après sa création.
+                // Format the weather data
+                var weatherService = new WeatherDataService();
+                var weatherData = await weatherService.GetWeatherDataForEvent(eventCreated.Location);
+        
+                if (weatherData != null && weatherData.ContainsKey(_selectedDate.ToString("yyyy-MM-dd")))
+                {
+                    var dailyWeather = weatherData[_selectedDate.ToString("yyyy-MM-dd")];
+                    float nebTotaleTotal = dailyWeather.ContainsKey("nebulositeTotaleTotal") ? dailyWeather["nebulositeTotaleTotal"] : 0;
+                    string nebTotalText = Display.ConvertNebulositeToText(nebTotaleTotal);
+
+                    eventCreated.WeatherDataFormatted = nebTotalText;
+                }
+
+                Events.Add(eventCreated); // Add a new event to the list after it's created.
             }
         }
+
 
         public async void OnDeleteEvent(Event eventToDelete)
         {

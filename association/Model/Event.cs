@@ -11,6 +11,8 @@ namespace association.Model
         public int RegisteredPeopleCount { get; set; }
         public int AvailableSpots { get; set; }
         public string Location { get; set; }
+        
+        public string WeatherDataFormatted { get; set; }
 
         public Dictionary<string, Dictionary<string, float>> WeatherData { get; set; }
 

@@ -33,6 +33,16 @@
                         <GridViewColumn Header="Registered People Count" DisplayMemberBinding="{Binding RegisteredPeopleCount}" />
                         <GridViewColumn Header="Space available" DisplayMemberBinding="{Binding AvailableSpots}" />
                         <GridViewColumn Header="Location" DisplayMemberBinding="{Binding Location}" />
+                        <GridViewColumn Header="Meteo">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{Binding WeatherDataFormatted}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
